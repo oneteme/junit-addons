@@ -7,4 +7,7 @@ public final class ResourceAccesException extends RuntimeException {
 		super(cause);
 	}
 
+	public ResourceAccesException(String message, Throwable cause) {
+		super(message, cause);
+	}
 }

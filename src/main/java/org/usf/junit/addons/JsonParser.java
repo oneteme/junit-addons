@@ -2,6 +2,8 @@ package org.usf.junit.addons;
 
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
+import java.util.NoSuchElementException;
 
 import org.junit.jupiter.api.extension.ParameterContext;
 import org.junit.jupiter.params.converter.ArgumentConversionException;
@@ -33,11 +35,18 @@ public final class JsonParser implements ArgumentConverter, AnnotationConsumer<C
 	
 	private ObjectMapper definedMapper() {
 		try {
-			return (ObjectMapper) annotation.clazz()
-					.getDeclaredMethod(annotation.method())
-					.invoke(null);
-		} catch (Exception e) {
-			throw new ArgumentConversionException("error while instantiating " + annotation.clazz(), e);
+			var method = annotation.clazz()
+					.getDeclaredMethod(annotation.method());
+			if(ObjectMapper.class.isAssignableFrom(method.getReturnType())) {
+				return (ObjectMapper) method.invoke(null);
+			}
+			throw new IllegalArgumentException(annotation.clazz().getSimpleName() + "." + annotation.method() + " must return an instance of ObjectMapper");
+		} catch (InvocationTargetException e) {
+			throw new IllegalArgumentException(annotation.clazz().getSimpleName() + "." + annotation.method() + " should have no parameters", e);
+		} catch (NoSuchMethodException e) {
+			throw new NoSuchElementException(annotation.clazz().getSimpleName() + "." + annotation.method() + " method not found");
+		} catch (SecurityException | IllegalAccessException e) {
+			throw new ResourceAccesException(annotation.clazz().getSimpleName() + "." + annotation.method() + " not accessibe", e);
 		}
 	}
 	

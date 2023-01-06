@@ -52,7 +52,7 @@ public final class FolderArgumentsProvider implements ArgumentsProvider, Annotat
 			var c = method.getParameters()[0].getClass();
 			if(ArgumentsAccessor.class.isAssignableFrom(c)){
 				var fn = typeResolver(fs.defaultType());
-				return Stream.of(folders).map(f-> arguments(Stream.of(f.listFiles()).map(fn).toArray()));
+				return Stream.of(folders).map(f-> arguments(Stream.of(f.listFiles()).map(fn).toArray())); //all files
 			}
 		}
 		return Stream.of(folders)
