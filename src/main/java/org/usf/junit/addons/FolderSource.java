@@ -51,7 +51,7 @@ public @interface FolderSource {
 			if(idx > -1) {
 				filename = filename.substring(0, idx);
 			}
-			return filename.replaceAll("[\\s-_\\.]", "").toLowerCase();
+			return filename.replaceAll("[-_\\s\\.]", "").toLowerCase();
 		}
 	}
 }
