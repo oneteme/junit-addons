@@ -58,7 +58,7 @@
    </dependencies>
    <profiles>
       <profile>
-         <id></id>
+         <id>deploy</id>
          <build>
             <plugins>
                <plugin>
