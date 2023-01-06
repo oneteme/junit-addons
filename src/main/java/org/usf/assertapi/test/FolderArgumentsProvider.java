@@ -64,7 +64,7 @@ public final class FolderArgumentsProvider implements ArgumentsProvider, Annotat
 			return null; //TODO primitive types ? 
 		}
 		if(res.length == 1) {
-			var type = findAnnotation(arg, ConvertWith.class) == null  ? arg.getType() : fs.defaultType();
+			var type = findAnnotation(arg, ConvertWith.class).isEmpty() ? arg.getType() : fs.defaultType();
 			return typeResolver(type).apply(res[0]);
 		}
 		throw new IllegalArgumentException(arg.getName() + " : to many resources found");
