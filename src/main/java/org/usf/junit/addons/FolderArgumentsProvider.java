@@ -49,7 +49,8 @@ public final class FolderArgumentsProvider implements ArgumentsProvider, Annotat
 			return Stream.of(folders).map(f-> arguments()); //no args
 		}
 		if(method.getParameterCount() == 1) {
-			if(ArgumentsAccessor.class.isAssignableFrom(method.getParameters()[0].getClass())){
+			var c = method.getParameters()[0].getClass();
+			if(ArgumentsAccessor.class.isAssignableFrom(c)){
 				var fn = typeResolver(fs.defaultType());
 				return Stream.of(folders).map(f-> arguments(Stream.of(f.listFiles()).map(fn).toArray()));
 			}
@@ -61,7 +62,7 @@ public final class FolderArgumentsProvider implements ArgumentsProvider, Annotat
 	private Object attachedResource(File folder, Parameter arg) {
 		File[] res = fs.mode().matchingFiles(arg, folder);
 		if(res.length == 0) {
-			return null; //TODO primitive types ? 
+			return null; //TD primitive types ? 
 		}
 		if(res.length == 1) {
 			var type = findAnnotation(arg, ConvertWith.class).isEmpty() ? arg.getType() : fs.defaultType();
@@ -85,7 +86,7 @@ public final class FolderArgumentsProvider implements ArgumentsProvider, Annotat
 				try {
 					return f.toURI().toURL().openStream();
 				} catch (IOException e) {
-					throw new RuntimeException(e);
+					throw new ResourceAccesException(e);
 				}
 			};
 		}
@@ -94,7 +95,7 @@ public final class FolderArgumentsProvider implements ArgumentsProvider, Annotat
 				try {
 					return readString(f.toPath());
 				} catch (IOException e) {
-					throw new RuntimeException(e);
+					throw new ResourceAccesException(e);
 				}
 			};
 		}
