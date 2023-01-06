@@ -1,4 +1,4 @@
-package org.usf.assertapi.test;
+package org.usf.junit.addons;
 
 import java.io.File;
 import java.io.IOException;

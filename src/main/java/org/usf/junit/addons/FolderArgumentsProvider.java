@@ -1,4 +1,4 @@
-package org.usf.assertapi.test;
+package org.usf.junit.addons;
 
 import static java.nio.file.Files.readString;
 import static java.util.regex.Pattern.compile;

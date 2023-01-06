@@ -1,7 +1,7 @@
-package org.usf.assertapi.test;
+package org.usf.junit.addons;
 
 import static java.lang.Character.MIN_VALUE;
-import static  org.usf.assertapi.test.FolderSource.MatchingMode.SMART;
+import static org.usf.junit.addons.FolderSource.MatchingMode.SMART;
 
 import java.io.File;
 import java.lang.annotation.Documented;
