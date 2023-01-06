@@ -39,14 +39,18 @@ public final class JsonParser implements ArgumentConverter, AnnotationConsumer<C
 			if(ObjectMapper.class.isAssignableFrom(method.getReturnType())) {
 				return (ObjectMapper) method.invoke(null);
 			}
-			throw new IllegalArgumentException(annotation.clazz().getSimpleName() + "." + annotation.method() + " method must return an instance of ObjectMapper");
+			throw new IllegalArgumentException(methodFullName() + " method must return an instance of ObjectMapper");
 		} catch (InvocationTargetException e) {
-			throw new IllegalArgumentException(annotation.clazz().getSimpleName() + "." + annotation.method() + " method should have no parameters", e);
+			throw new IllegalArgumentException(methodFullName() + " method should have no parameters", e);
 		} catch (NoSuchMethodException e) {
-			throw new NoSuchElementException(annotation.clazz().getSimpleName() + "." + annotation.method() + " method not found");
+			throw new NoSuchElementException(methodFullName() + " method not found");
 		} catch (SecurityException | IllegalAccessException e) {
-			throw new ResourceAccesException(annotation.clazz().getSimpleName() + "." + annotation.method() + " method is not accessibe", e);
+			throw new ResourceAccesException(methodFullName() + " method is not accessibe", e);
 		}
+	}
+	
+	private String methodFullName() {
+		return annotation.clazz().getSimpleName() + "." + annotation.method();
 	}
 	
 	/**
