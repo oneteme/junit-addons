@@ -35,6 +35,7 @@ public @interface FolderSource {
 				return folder.listFiles(f-> f.isFile() && f.getName().equalsIgnoreCase(arg.getName())); //filesys ignore case
 			}
 		},
+		
 		SMART {
 			@Override
 			public File[] matchingFiles(Parameter arg, File folder) {
