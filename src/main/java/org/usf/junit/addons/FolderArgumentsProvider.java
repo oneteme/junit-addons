@@ -62,7 +62,10 @@ public final class FolderArgumentsProvider implements ArgumentsProvider, Annotat
 	private Object attachedResource(File folder, Parameter arg) {
 		File[] res = fs.mode().matchingFiles(arg, folder);
 		if(res.length == 0) {
-			return null; //TD primitive types ? 
+			res = fs.mode().matchingFiles(arg, folder.getParentFile()); //search in parent (shared resources)
+			if(res.length == 0) {
+				return null; //TD primitive types ? 
+			}
 		}
 		if(res.length == 1) {
 			var type = findAnnotation(arg, ConvertWith.class).isEmpty() ? arg.getType() : fs.defaultType();

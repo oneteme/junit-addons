@@ -54,7 +54,7 @@ public final class JsonParser implements ArgumentConverter, AnnotationConsumer<C
 	}
 	
 	/**
-	 * do not rename this method
+	 * do not delete or rename this method
 	 * 
 	 * @see org.usf.assertapi.core.junit.ConvertWithJsonParser
 	 * 
