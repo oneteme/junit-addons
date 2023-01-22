@@ -66,9 +66,9 @@ public final class FolderArgumentsProvider implements ArgumentsProvider, Annotat
 	}
 	
 	private Object attachedResource(File folder, Parameter arg) {
-		File[] res = fs.mode().matchingFiles(arg, folder);
+		File[] res = fs.mode().matchingFiles(arg.getName(), folder);
 		if(res.length == 0) {
-			res = fs.mode().matchingFiles(arg, folder.getParentFile()); //search in parent (shared resources)
+			res = fs.mode().matchingFiles(arg.getName(), folder.getParentFile()); //search in parent (shared resources)
 		}
 		if(res.length == 0) {
 			return null; //TD primitive types ? 

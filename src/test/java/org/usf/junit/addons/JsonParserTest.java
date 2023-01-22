@@ -2,7 +2,7 @@ package org.usf.junit.addons;
 
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.usf.junit.addons.AssertExt.assertThrowsWithMessage;
 
 import java.io.File;
 import java.lang.annotation.Annotation;
@@ -19,90 +19,93 @@ import org.junit.jupiter.params.converter.ArgumentConversionException;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+/**
+ * 
+ * @author u$f
+ *
+ */
 class JsonParserTest {
 
 	@Test
 	void testConvert() {
 		var jp = new JsonParser();
-		jp.accept(annotation("method1"));
-		assertArrayEquals(new String[] {"JSON"}, (String[])jp.convert(jsonFile("Json-FILE.json"), context(parameter("method1"))));
+		jp.accept(argAnnotation("validMapper"));
+		var obj = jp.convert(jsonFile("Json-FILE.json"), context(methodParameter("validMapper")));
+		assertArrayEquals(new String[] {"JSON"}, (String[])obj);
 	}
 
 	@Test
-	void testConvert_IOException() {
+	void testConvert_badContent() {
 		var jp = new JsonParser();
-		jp.accept(annotation("method1"));
-		assertThrows(ArgumentConversionException.class, ()->
-			jp.convert(jsonFile("TEXT_file.txt"), context(parameter("method1"))));
+		jp.accept(argAnnotation("validMapper"));
+		var file = jsonFile("TEXT_file.txt");
+		assertThrowsWithMessage("error while reading file " + file, 
+				ArgumentConversionException.class, ()-> jp.convert(file, context(methodParameter("validMapper"))));
 	}
 
 	@Test
-	void testDefinedMapper_default() {
+	void testDefinedMapper_ok() {
 		var jp = new JsonParser();
-		jp.accept(annotation("method1"));
+		jp.accept(argAnnotation("validMapper"));
 		assertDoesNotThrow(jp::definedMapper);
 	}
 	
 	@Test
-	void testDefinedMapper_IllegalArgumentException() {
+	void testDefinedMapper_badMethodReturn() {
 		var jp = new JsonParser();
-		jp.accept(annotation("method2"));
-		assertThrows(IllegalArgumentException.class, jp::definedMapper);
+		jp.accept(argAnnotation("badMethodReturn"));
+		assertThrowsWithMessage("JsonParserTest.badMethodReturn method must return an instance of ObjectMapper", 
+				IllegalArgumentException.class, jp::definedMapper);
 	}
 
 	@Test
-	void testDefinedMapper_InvocationTargetException() {
+	void testDefinedMapper_invokeException() {
 		var jp = new JsonParser();
-		jp.accept(annotation("method3"));
-		assertThrows(IllegalArgumentException.class, jp::definedMapper);
+		jp.accept(argAnnotation("invokeException"));
+		assertThrowsWithMessage("JsonParserTest.invokeException method invoke throws exception", 
+				ResourceAccesException.class, jp::definedMapper);
 	}
 	
 	@Test
-	void testDefinedMapper_NoSuchMethodException() {
+	void testDefinedMapper_missingMethod() {
 		var jp = new JsonParser();
-		jp.accept(annotation("method4"));
-		assertThrows(NoSuchElementException.class, jp::definedMapper);
+		jp.accept(argAnnotation("missingMethod"));
+		assertThrowsWithMessage("JsonParserTest.missingMethod method not found", 
+				NoSuchElementException.class, jp::definedMapper);
 	}
 	
 	@Test
-	void testDefinedMapper_IllegalAccessException() {
+	void testDefinedMapper_privateMethod() {
 		var jp = new JsonParser();
-		jp.accept(annotation("method5"));
-		assertThrows(ResourceAccesException.class, jp::definedMapper);
+		jp.accept(argAnnotation("privateMethod"));
+		assertThrowsWithMessage("JsonParserTest.privateMethod method is not accessibe", 
+				ResourceAccesException.class, jp::definedMapper);
 	}
 
-	void method1(@ConvertWithJsonParser String[] arr){	}
+	void validMapper(@ConvertWithJsonParser String[] arr){ }
 	
-	void method2(@ConvertWithJsonParser(clazz = JsonParserTest.class, method = "notMapper") String[] arr){ }
+	void badMethodReturn(@ConvertWithJsonParser(clazz = JsonParserTest.class, method = "badMethodReturn") String[] arr){ }
 
-	void method3(@ConvertWithJsonParser(clazz = JsonParserTest.class, method = "throwException") String[] arr){ }
+	void invokeException(@ConvertWithJsonParser(clazz = JsonParserTest.class, method = "invokeException") String[] arr){ }
 
-	void method4(@ConvertWithJsonParser(clazz = JsonParserTest.class, method = "noMethod") String[] arr){	}
+	void missingMethod(@ConvertWithJsonParser(clazz = JsonParserTest.class, method = "missingMethod") String[] arr){ }
 
-	void method5(@ConvertWithJsonParser(clazz = JsonParserTest.class, method = "privateMapper") String[] arr){ }
+	void privateMethod(@ConvertWithJsonParser(clazz = JsonParserTest.class, method = "privateMethod") String[] arr){ }
 
-	public static Object notMapper() {
+	public static Object badMethodReturn() {
 		return null;
 	}
 	
-	public static ObjectMapper throwException() {
+	public static ObjectMapper invokeException() {
 		throw new RuntimeException();
 	}
 	
-	private static ObjectMapper privateMapper() {
+	@SuppressWarnings("unused")
+	private static ObjectMapper privateMethod() {
 		return null;
 	}
-	
-	File jsonFile(String filename) {
-		try {
-			return Path.of(getClass().getResource("single/case-1").toURI())
-					.resolve(filename).toFile();
-		} catch (URISyntaxException e) {
-			throw new RuntimeException(e);
-		}
-	}
 
-	ConvertWithJsonParser annotation(String method) {
+	ConvertWithJsonParser argAnnotation(String method) {
 		try {
 			var m = getClass().getDeclaredMethod(method, String[].class);
 			return m.getParameters()[0].getAnnotationsByType(ConvertWithJsonParser.class)[0];
@@ -111,10 +114,19 @@ class JsonParserTest {
 		}
 	}
 
-	Parameter parameter(String method) {
+	Parameter methodParameter(String method) {
 		try {
 			return getClass().getDeclaredMethod(method, String[].class).getParameters()[0];
 		} catch(Exception e) {
+			throw new RuntimeException(e);
+		}
+	}
+	
+	File jsonFile(String filename) {
+		try {
+			return Path.of(getClass().getResource("single/case-1").toURI())
+					.resolve(filename).toFile();
+		} catch (URISyntaxException e) {
 			throw new RuntimeException(e);
 		}
 	}

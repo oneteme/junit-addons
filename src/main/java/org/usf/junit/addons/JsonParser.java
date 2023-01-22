@@ -38,7 +38,7 @@ public final class JsonParser implements ArgumentConverter, AnnotationConsumer<C
 			}
 			throw new IllegalArgumentException(methodFullName() + " method must return an instance of ObjectMapper");
 		} catch (InvocationTargetException e) {
-			throw new IllegalArgumentException(methodFullName() + " method should have no parameters", e);
+			throw new ResourceAccesException(methodFullName() + " method invoke throws exception", e);
 		} catch (NoSuchMethodException e) {
 			throw new NoSuchElementException(methodFullName() + " method not found");
 		} catch (SecurityException | IllegalAccessException e) {

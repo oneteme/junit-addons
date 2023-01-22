@@ -10,7 +10,6 @@ import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
-import java.lang.reflect.Parameter;
 
 import org.junit.jupiter.params.provider.ArgumentsSource;
 
@@ -22,7 +21,7 @@ public @interface FolderSource {
 	
 	String path() default ""; //root
 
-	String pattern() default ""; //regex
+	String pattern() default ""; //folder pattern
 	
 	FileMatchingMode mode() default SMART;
 	
@@ -32,21 +31,21 @@ public @interface FolderSource {
 		
 		STRICT {
 			@Override
-			public File[] matchingFiles(Parameter arg, File folder) {
-				var p = compile(arg.getName() + "(\\..+)?$", CASE_INSENSITIVE).asPredicate(); //filesys ignore case
+			public File[] matchingFiles(String argName, File folder) {
+				var p = compile("^" + argName + "(\\..+)?$", CASE_INSENSITIVE).asPredicate(); //filesys ignore case
 				return folder.listFiles(f-> f.isFile() && p.test(f.getName()));
 			}
 		},
 		
 		SMART {
 			@Override
-			public File[] matchingFiles(Parameter arg, File folder) {
-				var argName = arg.getName().replace("_", "").toLowerCase();
-				return folder.listFiles(f-> f.isFile() && argName.contains(smartTransforme(f.getName())));
+			public File[] matchingFiles(String argName, File folder) {
+				var name = argName.replace("_", "").toLowerCase();
+				return folder.listFiles(f-> f.isFile() && name.contains(smartTransforme(f.getName())));
 			}
 		};
 		
-		public abstract File[] matchingFiles(Parameter arg, File folder);
+		public abstract File[] matchingFiles(String arg, File folder);
 
 		private static String smartTransforme(String filename) {
 			var idx = filename.lastIndexOf('.');
