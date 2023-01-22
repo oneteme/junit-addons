@@ -59,8 +59,9 @@ public final class FolderArgumentsProvider implements ArgumentsProvider, Annotat
 				.map(f-> arguments(Stream.of(method.getParameters()).map(p-> attachedResource(f, p)).toArray()));
 	}
 
-	private Object[] attachedResource(File folder) { //ArgumentsAccessor
-		return Stream.of(folder.listFiles(File::isFile))
+	Object[] attachedResource(File folder) { //ArgumentsAccessor
+		var files = folder.listFiles(File::isFile);
+		return files == null ? null : Stream.of(files)
 			.sorted()
 			.map(typeResolver(fs.defaultType()))
 			.toArray();
