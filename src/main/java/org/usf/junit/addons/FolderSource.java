@@ -25,7 +25,7 @@ public @interface FolderSource {
 	
 	FileMatchingMode mode() default SMART;
 	
-	Class<?> defaultType() default File.class; // FILE | URI | PATH | InputStream | String
+	Class<?> defaultType() default File.class; // FILE | URI | PATH | InputStream | String | String[]
 	
 	enum FileMatchingMode {
 		
@@ -45,7 +45,7 @@ public @interface FolderSource {
 			}
 		};
 		
-		public abstract File[] matchingFiles(String arg, File folder);
+		public abstract File[] matchingFiles(String argName, File folder);
 
 		private static String smartTransforme(String filename) {
 			var idx = filename.lastIndexOf('.');

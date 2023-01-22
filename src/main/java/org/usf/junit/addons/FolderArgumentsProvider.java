@@ -11,6 +11,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Parameter;
 import java.net.URI;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.function.Function;
 import java.util.function.Predicate;
@@ -80,7 +81,7 @@ public final class FolderArgumentsProvider implements ArgumentsProvider, Annotat
 		throw new IllegalArgumentException(arg.getName() + " : to many resources found");
 	}
 	
-	private Function<File, Object> typeResolver(Class<?> c) {
+	static Function<File, Object> typeResolver(Class<?> c) {
 		if(c.equals(File.class)) {
 			return f-> f;
 		}
@@ -103,6 +104,15 @@ public final class FolderArgumentsProvider implements ArgumentsProvider, Annotat
 			return f-> {
 				try {
 					return readString(f.toPath());
+				} catch (IOException e) {
+					throw new ResourceAccesException(e);
+				}
+			};
+		}
+		if(c.equals(String[].class)) {
+			return f-> {
+				try {
+					return Files.lines(f.toPath()).toArray(String[]::new);
 				} catch (IOException e) {
 					throw new ResourceAccesException(e);
 				}
