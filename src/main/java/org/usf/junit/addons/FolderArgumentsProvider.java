@@ -53,14 +53,14 @@ public final class FolderArgumentsProvider implements ArgumentsProvider, Annotat
 		if(method.getParameterCount() == 1) {
 			var c = method.getParameters()[0].getType();
 			if(ArgumentsAccessor.class.isAssignableFrom(c)){
-				return Stream.of(folders).map(f-> arguments(attachedResource(f))); //all files
+				return Stream.of(folders).map(f-> arguments(attachedResources(f))); //all files
 			}
 		}
 		return Stream.of(folders)
 				.map(f-> arguments(Stream.of(method.getParameters()).map(p-> attachedResource(f, p)).toArray()));
 	}
 
-	Object[] attachedResource(File folder) { //ArgumentsAccessor
+	Object[] attachedResources(File folder) { //ArgumentsAccessor
 		var files = folder.listFiles(File::isFile);
 		return files == null ? null : Stream.of(files)
 			.sorted(comparing(File::getName)) //not same order window/unix
@@ -68,7 +68,7 @@ public final class FolderArgumentsProvider implements ArgumentsProvider, Annotat
 			.toArray();
 	}
 	
-	private Object attachedResource(File folder, Parameter arg) {
+	Object attachedResource(File folder, Parameter arg) {
 		File[] res = fs.mode().matchingFiles(arg.getName(), folder);
 		if(res.length == 0) {
 			res = fs.mode().matchingFiles(arg.getName(), folder.getParentFile()); //search in parent (shared resources)
