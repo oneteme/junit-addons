@@ -41,13 +41,13 @@ public @interface FolderSource {
 			@Override
 			public File[] matchingFiles(String argName, File folder) {
 				var name = argName.replace("_", "").toLowerCase();
-				return folder.listFiles(f-> f.isFile() && name.contains(smartTransforme(f.getName())));
+				return folder.listFiles(f-> f.isFile() && name.contains(smartTransform(f.getName())));
 			}
 		};
 		
 		public abstract File[] matchingFiles(String argName, File folder);
 
-		private static String smartTransforme(String filename) {
+		private static String smartTransform(String filename) {
 			var idx = filename.lastIndexOf('.');
 			if(idx > -1) {
 				filename = filename.substring(0, idx);

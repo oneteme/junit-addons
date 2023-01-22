@@ -1,6 +1,7 @@
 package org.usf.junit.addons;
 
 import static java.nio.file.Files.readString;
+import static java.util.Comparator.comparing;
 import static java.util.regex.Pattern.compile;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
 import static org.junit.platform.commons.util.AnnotationUtils.findAnnotation;
@@ -62,7 +63,7 @@ public final class FolderArgumentsProvider implements ArgumentsProvider, Annotat
 	Object[] attachedResource(File folder) { //ArgumentsAccessor
 		var files = folder.listFiles(File::isFile);
 		return files == null ? null : Stream.of(files)
-			.sorted()
+			.sorted(comparing(File::getName)) //not same order window/unix
 			.map(typeResolver(fs.defaultType()))
 			.toArray();
 	}

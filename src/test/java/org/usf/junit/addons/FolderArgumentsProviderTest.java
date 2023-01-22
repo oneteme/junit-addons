@@ -53,12 +53,12 @@ class FolderArgumentsProviderTest {
 			.map(File::getName)
 			.toArray(String[]::new);
 		assertArrayEquals(new String[] {
+				"JsonFile.json",
+				"TEXT file.txt",
 				"data.bin.dat",
 				"file-separator",
 				"file_separator",
-				"JsonFile.json",
-				"temp",
-				"TEXT file.txt"
+				"temp"
 		}, res); //files order + excludes folders
 	}
 
@@ -69,12 +69,12 @@ class FolderArgumentsProviderTest {
 		provider.accept(selfMethodAnnotation());
 		var res = provider.attachedResource(assets.toFile());
 		assertArrayEquals(new String[] {
-				"",
-				"",
-				"",
 				"[\"JSON\"]",
-				"dummy text",
-				""
+				"",
+				"",
+				"",
+				"",
+				"dummy text"
 		}, res); //files order + excludes folders
 	}
 	

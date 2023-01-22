@@ -55,9 +55,9 @@ class DemoTest {
 		var parent = Paths.get(getClass().getResource("single/case-1").toURI());
 		assertNotNull(arg);
 		assertEquals(4, arg.size());
-		assertEquals(parent.resolve("binary_arr").toFile(), arg.get(0));
-		assertEquals(parent.resolve("Json-FILE.json").toFile(), arg.get(1));
-		assertEquals(parent.resolve("TEXT_file.txt").toFile(), arg.get(2));
+		assertEquals(parent.resolve("Json-FILE.json").toFile(), arg.get(0));
+		assertEquals(parent.resolve("TEXT_file.txt").toFile(), arg.get(1));
+		assertEquals(parent.resolve("binary_arr").toFile(), arg.get(2));
 		assertEquals(parent.resolve("xml.file.txt").toFile(), arg.get(3));
 	}
 
@@ -66,9 +66,9 @@ class DemoTest {
 	void testArgumentsAccessorInjection_string(ArgumentsAccessor arg) {
 		assertNotNull(arg);
 		assertEquals(4, arg.size());
-		assertEquals("BIN", arg.get(0));
-		assertEquals("[\"JSON\"]", arg.get(1));
-		assertEquals("TXT", arg.get(2));
+		assertEquals("[\"JSON\"]", arg.get(0));
+		assertEquals("TXT", arg.get(1));
+		assertEquals("BIN", arg.get(2));
 		assertEquals("<xml>", arg.get(3));
 	}
 
