@@ -49,23 +49,29 @@ public final class FolderArgumentsProvider implements ArgumentsProvider, Annotat
 			return Stream.of(folders).map(f-> arguments()); //no args
 		}
 		if(method.getParameterCount() == 1) {
-			var c = method.getParameters()[0].getClass();
+			var c = method.getParameters()[0].getType();
 			if(ArgumentsAccessor.class.isAssignableFrom(c)){
-				var fn = typeResolver(fs.defaultType());
-				return Stream.of(folders).map(f-> arguments(Stream.of(f.listFiles()).map(fn).toArray())); //all files
+				return Stream.of(folders).map(f-> arguments(attachedResource(f))); //all files
 			}
 		}
 		return Stream.of(folders)
 				.map(f-> arguments(Stream.of(method.getParameters()).map(p-> attachedResource(f, p)).toArray()));
+	}
+
+	private Object[] attachedResource(File folder) { //ArgumentsAccessor
+		return Stream.of(folder.listFiles(File::isFile))
+			.sorted()
+			.map(typeResolver(fs.defaultType()))
+			.toArray();
 	}
 	
 	private Object attachedResource(File folder, Parameter arg) {
 		File[] res = fs.mode().matchingFiles(arg, folder);
 		if(res.length == 0) {
 			res = fs.mode().matchingFiles(arg, folder.getParentFile()); //search in parent (shared resources)
-			if(res.length == 0) {
-				return null; //TD primitive types ? 
-			}
+		}
+		if(res.length == 0) {
+			return null; //TD primitive types ? 
 		}
 		if(res.length == 1) {
 			var type = findAnnotation(arg, ConvertWith.class).isEmpty() ? arg.getType() : fs.defaultType();

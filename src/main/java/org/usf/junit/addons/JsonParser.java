@@ -23,17 +23,14 @@ public final class JsonParser implements ArgumentConverter, AnnotationConsumer<C
 	
 	@Override
 	public Object convert(Object source, ParameterContext context) throws ArgumentConversionException {
-		var mapper = annotation == null 
-				? defaultMapper()
-				: definedMapper();
 		try {
-			return mapper.readValue((File)source, context.getParameter().getType());
+			return definedMapper().readValue((File)source, context.getParameter().getType());
 		} catch (IOException e) {
 			throw new ArgumentConversionException("error while reading file " + source, e);
 		}
 	}
 	
-	private ObjectMapper definedMapper() {
+	ObjectMapper definedMapper() {
 		try {
 			var method = annotation.clazz().getDeclaredMethod(annotation.method());
 			if(ObjectMapper.class.isAssignableFrom(method.getReturnType())) {
