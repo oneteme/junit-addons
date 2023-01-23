@@ -25,7 +25,7 @@ public @interface FolderSource {
 	
 	FileMatchingMode mode() default SMART;
 	
-	Class<?> defaultType() default File.class; // FILE | URI | PATH | InputStream | String | String[]
+	Class<?> defaultType() default File.class; // FILE | PATH | URI | InputStream | String | String[] | byte[]
 	
 	enum FileMatchingMode {
 		

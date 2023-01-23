@@ -1,5 +1,7 @@
 package org.usf.junit.addons;
 
+import static java.nio.file.Files.readAllBytes;
+import static java.nio.file.Files.readAllLines;
 import static java.nio.file.Files.readString;
 import static java.util.Comparator.comparing;
 import static java.util.regex.Pattern.compile;
@@ -10,9 +12,10 @@ import java.io.File;
 import java.io.FileFilter;
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
 import java.net.URI;
-import java.nio.file.Files;
+import java.net.URISyntaxException;
 import java.nio.file.Path;
 import java.util.function.Function;
 import java.util.function.Predicate;
@@ -27,8 +30,8 @@ import org.junit.jupiter.params.support.AnnotationConsumer;
 
 public final class FolderArgumentsProvider implements ArgumentsProvider, AnnotationConsumer<FolderSource> {
 	
-	private FolderSource fs; //relative | absolute
-	private Predicate<String> filter;
+	FolderSource fs; //relative | absolute
+	Predicate<String> filter; //default => U.T
 
 	@Override
 	public void accept(FolderSource ds) {
@@ -40,9 +43,13 @@ public final class FolderArgumentsProvider implements ArgumentsProvider, Annotat
 
 	@Override
 	public Stream<? extends Arguments> provideArguments(ExtensionContext context) throws Exception {
-		var method = context.getTestMethod().orElseThrow();
-		var clazz = context.getTestClass().orElseThrow();
-		var root = clazz.getResource(fs.path());
+		return provideArguments(
+				context.getTestClass().orElseThrow(), 
+				context.getTestMethod().orElseThrow());
+	}
+
+	Stream<Arguments> provideArguments(Class<?> testClass, Method method) throws URISyntaxException {
+		var root = testClass.getResource(fs.path());
 		if(root == null) {
 			return Stream.empty();
 		}
@@ -87,40 +94,57 @@ public final class FolderArgumentsProvider implements ArgumentsProvider, Annotat
 		if(c.equals(File.class)) {
 			return f-> f;
 		}
-		if(c.equals(URI.class)) {
-			return File::toURI;
-		}
 		if(c.equals(Path.class)) {
 			return File::toPath;
 		}
+		if(c.equals(URI.class)) {
+			return File::toURI;
+		}
 		if(c.equals(InputStream.class)) {
-			return f-> {
-				try {
-					return f.toURI().toURL().openStream();
-				} catch (IOException e) {
-					throw new ResourceAccesException(e);
-				}
-			};
+			return FolderArgumentsProvider::readStream;
 		}
 		if(c.equals(String.class)) {
-			return f-> {
-				try {
-					return readString(f.toPath());
-				} catch (IOException e) {
-					throw new ResourceAccesException(e);
-				}
-			};
+			return FolderArgumentsProvider::readContent;
 		}
 		if(c.equals(String[].class)) {
-			return f-> {
-				try {
-					return Files.lines(f.toPath()).toArray(String[]::new);
-				} catch (IOException e) {
-					throw new ResourceAccesException(e);
-				}
-			};
+			return FolderArgumentsProvider::readLines;
+		}
+		if(c.equals(byte[].class)) {
+			return FolderArgumentsProvider::readBytes;
 		}
 		throw new UnsupportedOperationException("Unsupported type " + c );
+	}
+
+	private static InputStream readStream(File f) {
+		try {
+			return f.toURI().toURL().openStream();
+		} catch (IOException e) {
+			throw new ResourceAccesException(e);
+		}
+	}
+	
+	private static String readContent(File f) {
+		try {
+			return readString(f.toPath());
+		} catch (IOException e) {
+			throw new ResourceAccesException(e);
+		}
+	}
+	
+	private static String[] readLines(File f) {
+		try {
+			return readAllLines(f.toPath()).toArray(String[]::new);
+		} catch (IOException e) {
+			throw new ResourceAccesException(e);
+		}
+	}	
+	
+	private static byte[] readBytes(File f) {
+		try {
+			return readAllBytes(f.toPath());
+		} catch (IOException e) {
+			throw new ResourceAccesException(e);
+		}
 	}
 	
 	private FileFilter filter(){

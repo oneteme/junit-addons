@@ -1,23 +1,29 @@
 package org.usf.junit.addons;
 
+import static java.lang.String.join;
+
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.annotation.Annotation;
+import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
 import java.net.URI;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.List;
-import java.util.Optional;
-
-import org.junit.jupiter.api.extension.ParameterContext;
-
 
 final class Utils {
 	
 	private Utils() {}
+	
+	static Method classMethod(Class<?> clazz, String method, Class<?>... argClass) {
+		try {
+			return clazz.getDeclaredMethod(method, argClass);
+		} catch(Exception e) {
+			throw new RuntimeException(e);
+		}
+	}
 
 	static Parameter methodParameter(Class<?> clazz, String method, Class<?> argClass) {
 		try {
@@ -27,45 +33,21 @@ final class Utils {
 		}
 	}
 
-	static <T extends Annotation> T  methodAnnotation(Class<?> clazz, String method, Class<T> annotationClass) {
+	static <T extends Annotation> T methodAnnotation(Class<?> clazz, String method, Class<T> annotationClass, Class<?>... argClass) {
 		try {
-			return clazz.getDeclaredMethod(method).getDeclaredAnnotation(annotationClass);
+			return clazz.getDeclaredMethod(method, argClass).getDeclaredAnnotation(annotationClass);
 		} catch(Exception e) {
 			throw new RuntimeException(e);
 		}
 	}
 
-	static <T extends Annotation> T methodParameterAnnotation(Class<?> clazz, String method, Class<?> argClass, Class<T> annotationClass) {
+	static <T extends Annotation> T methodParameterAnnotation(Class<?> clazz, String method, Class<T> annotationClass, Class<?>... argClass) {
 		try {
 			var m = clazz.getDeclaredMethod(method, argClass);
 			return m.getParameters()[0].getAnnotationsByType(annotationClass)[0];
 		} catch(Exception e) {
 			throw new RuntimeException(e);
 		}
-	}
-
-	static ParameterContext parameterContext(Parameter p) {
-		
-		return new ParameterContext() {
-			
-			@Override
-			public boolean isAnnotated(Class<? extends Annotation> annotationType) {return false; }
-			
-			@Override
-			public Optional<Object> getTarget() {return Optional.empty(); }
-			
-			@Override
-			public Parameter getParameter() { return p; }
-			
-			@Override
-			public int getIndex() { return 0; }
-			
-			@Override
-			public <A extends Annotation> List<A> findRepeatableAnnotations(Class<A> annotationType) { return null; }
-			
-			@Override
-			public <A extends Annotation> Optional<A> findAnnotation(Class<A> annotationType) { return Optional.empty(); }
-		};
 	}
 
 	static String readContent(Object o) throws IOException {
@@ -95,9 +77,11 @@ final class Utils {
 			return (String) o;
 		}
 		if(o instanceof String[]) {
-			return String.join("", (String[]) o);
+			return join("", (String[]) o);
+		}
+		if(o instanceof byte[]) {
+			return new String((byte[]) o);
 		}
 		return null;
 	}
-
 }
