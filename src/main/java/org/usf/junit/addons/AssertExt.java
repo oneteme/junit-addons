@@ -11,7 +11,7 @@ public final class AssertExt {
 	private AssertExt() {}
 
 	public static void assertThrowsWithMessage(ThrowableMessage expected, Executable executable) {
-		assertEquals(expected.getMessage(), assertThrows(expected.getType(), executable).getMessage());
+		assertThrowsWithMessage(expected.getType(), expected.getMessage(), executable);
 	}
 	
 	public static void assertThrowsWithMessage(Class<? extends Throwable> expectedType, String expectedMessage, Executable executable) {

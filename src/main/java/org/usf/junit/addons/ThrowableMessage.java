@@ -1,12 +1,16 @@
 package org.usf.junit.addons;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 //not final 
 public class ThrowableMessage {
 	
 	private final Class<? extends Throwable> type;
 	private final String message;
 	
-	public ThrowableMessage(String type, String message) {
+	@JsonCreator
+	public ThrowableMessage(@JsonProperty("type") String type, @JsonProperty("message") String message) {
 		this.type = parse(type);
 		this.message = message;
 	}
