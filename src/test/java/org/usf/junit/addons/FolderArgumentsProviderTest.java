@@ -187,8 +187,9 @@ class FolderArgumentsProviderTest {
 	@FolderSource() //used in test 
 	void testAttachedResource_multiple() {
 		var provider = initFolderArgumentsProvider();
-		AssertExt.assertThrowsWithMessage("fileSeparator : to many resources found", 
-				IllegalArgumentException.class, ()-> provider.attachedResource(assets.toFile(), methodArg("multipleFiles")));
+		AssertExt.assertThrowsWithMessage(IllegalArgumentException.class, 
+				"fileSeparator : to many resources found", 
+				()-> provider.attachedResource(assets.toFile(), methodArg("multipleFiles")));
 	}
 	
 	@Test
@@ -220,8 +221,9 @@ class FolderArgumentsProviderTest {
 
 	@Test
 	void testTypeResolver_unsupported() {
-		assertThrowsWithMessage("Unsupported type class java.lang.Object", 
-				UnsupportedOperationException.class, ()-> typeResolver(Object.class));
+		assertThrowsWithMessage(UnsupportedOperationException.class, 
+				"Unsupported type class java.lang.Object", 
+				()-> typeResolver(Object.class));
 	}
 	
 	/* provideArguments methods */

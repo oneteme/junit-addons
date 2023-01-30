@@ -53,15 +53,16 @@ class JsonParserTest {
 	
 	@Test
 	void testConvert_unsuported() {
-		assertThrowsWithMessage("unsupported type : java.lang.Object", 
-				UnsupportedOperationException.class, ()-> initJsonParser("defaultMapper").convert(new Object(), String[].class));
+		assertThrowsWithMessage(UnsupportedOperationException.class, "unsupported type : java.lang.Object", 
+				()-> initJsonParser("defaultMapper").convert(new Object(), String[].class));
 	}
 
 	@Test
 	void testConvert_badContent() {
 		var file = asserts.resolve("temp").toFile();
-		assertThrowsWithMessage("error while reading file : " + file, 
-				ArgumentConversionException.class, ()-> initJsonParser("defaultMapper").convert(file, String[].class));
+		assertThrowsWithMessage(ArgumentConversionException.class, 
+				"error while reading file : " + file, 
+				()-> initJsonParser("defaultMapper").convert(file, String[].class));
 	}
 
 	@Test
@@ -71,26 +72,30 @@ class JsonParserTest {
 	
 	@Test
 	void testDefinedMapper_badMethodReturn() {
-		assertThrowsWithMessage("JsonParserTest.badMethodReturn method must return an instance of ObjectMapper", 
-				IllegalArgumentException.class, initJsonParser("badMethodReturn")::definedMapper);
+		assertThrowsWithMessage(IllegalArgumentException.class, 
+				"JsonParserTest.badMethodReturn method must return an instance of ObjectMapper", 
+				initJsonParser("badMethodReturn")::definedMapper);
 	}
 
 	@Test
 	void testDefinedMapper_invokeException() {
-		assertThrowsWithMessage("JsonParserTest.invokeException method invoke throws exception", 
-				ResourceAccesException.class, initJsonParser("invokeException")::definedMapper);
+		assertThrowsWithMessage(ResourceAccesException.class, 
+				"JsonParserTest.invokeException method invoke throws exception", 
+				initJsonParser("invokeException")::definedMapper);
 	}
 	
 	@Test
 	void testDefinedMapper_missingMethod() {
-		assertThrowsWithMessage("JsonParserTest.missingMethod method not found", 
-				NoSuchElementException.class, initJsonParser("missingMethod")::definedMapper);
+		assertThrowsWithMessage(NoSuchElementException.class, 
+				"JsonParserTest.missingMethod method not found", 
+				initJsonParser("missingMethod")::definedMapper);
 	}
 	
 	@Test
 	void testDefinedMapper_privateMethod() {
-		assertThrowsWithMessage("JsonParserTest.privateMethod method is not accessibe", 
-				ResourceAccesException.class, initJsonParser("privateMethod")::definedMapper);
+		assertThrowsWithMessage(ResourceAccesException.class, 
+				"JsonParserTest.privateMethod method is not accessibe", 
+				initJsonParser("privateMethod")::definedMapper);
 	}
 	
 	void defaultMapper(@ConvertWithJsonParser String[] arr){ }

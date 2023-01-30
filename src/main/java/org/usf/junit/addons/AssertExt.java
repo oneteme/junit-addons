@@ -9,13 +9,17 @@ import org.junit.jupiter.api.function.Executable;
 public final class AssertExt {
 	
 	private AssertExt() {}
+
+	public static void assertThrowsWithMessage(ThrowableMessage expected, Executable executable) {
+		assertEquals(expected.getMessage(), assertThrows(expected.getType(), executable).getMessage());
+	}
 	
-	public static void assertThrowsWithMessage(String expectedMessage, Class<? extends Throwable> expectedType, Executable executable) {
+	public static void assertThrowsWithMessage(Class<? extends Throwable> expectedType, String expectedMessage, Executable executable) {
 		assertEquals(expectedMessage, assertThrows(expectedType, executable).getMessage());
 	}
 	
-	public static void assertThrowsWithCause(Throwable throwable, Class<? extends Throwable> expectedType, Executable executable) {
-		assertSame(throwable, assertThrows(expectedType, executable).getCause());
+	public static void assertThrowsWithCause(Class<? extends Throwable> expectedType, Throwable expectedCause, Executable executable) {
+		assertSame(expectedCause, assertThrows(expectedType, executable).getCause());
 	}
 
 }
