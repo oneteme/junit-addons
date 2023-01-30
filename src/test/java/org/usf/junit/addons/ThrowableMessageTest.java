@@ -2,6 +2,7 @@ package org.usf.junit.addons;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.usf.junit.addons.AssertExt.assertThrowsWithMessage;
+import static org.usf.junit.addons.ThrowableMessage.parseType;
 
 import java.io.IOException;
 import java.sql.SQLException;
@@ -21,19 +22,19 @@ class ThrowableMessageTest {
 	
 	@ParameterizedTest
 	@ValueSource(classes = {Exception.class, IOException.class, SQLException.class})
-	void testParse(Class<?> type){
-		assertEquals(type, ThrowableMessage.parse(type.getName()));
+	void testParseType(Class<?> type){
+		assertEquals(type, parseType(type.getName()));
 	}
 
 	@Test
 	void testParse_badClass() {
 		assertThrowsWithMessage(IllegalArgumentException.class, 
 				"org.usf.assertapi.core.ApiRequest class not found", 
-				()-> ThrowableMessage.parse("org.usf.assertapi.core.ApiRequest"));
+				()-> parseType("org.usf.assertapi.core.ApiRequest"));
 
 		assertThrowsWithMessage(IllegalArgumentException.class, 
 				"java.lang.Object class is not throwable", 
-				()-> ThrowableMessage.parse("java.lang.Object"));
+				()-> parseType("java.lang.Object"));
 	}
 
 	@Test
@@ -41,5 +42,4 @@ class ThrowableMessageTest {
 		assertEquals("java.lang.Exception : dummy message", 
 				new ThrowableMessage(Exception.class.getName(), "dummy message").toString());
 	}
-	
 }

@@ -15,7 +15,7 @@ import org.junit.jupiter.params.support.AnnotationConsumer;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-public final class JsonParser implements ArgumentConverter, AnnotationConsumer<ConvertWithJsonParser> {
+final class JsonParser implements ArgumentConverter, AnnotationConsumer<ConvertWithJsonParser> {
 	
 	private ConvertWithJsonParser annotation;
 

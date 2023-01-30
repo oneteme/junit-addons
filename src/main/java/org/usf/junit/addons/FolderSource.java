@@ -55,5 +55,4 @@ public @interface FolderSource {
 			return filename.replaceAll("[-_\\s\\.]", "").toLowerCase();
 		}
 	}
-	
 }

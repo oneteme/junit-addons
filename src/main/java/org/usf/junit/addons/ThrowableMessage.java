@@ -11,7 +11,7 @@ public class ThrowableMessage {
 	
 	@JsonCreator
 	public ThrowableMessage(@JsonProperty("type") String type, @JsonProperty("message") String message) {
-		this.type = parse(type);
+		this.type = parseType(type);
 		this.message = message;
 	}
 
@@ -24,7 +24,7 @@ public class ThrowableMessage {
 	}
 	
 	@SuppressWarnings("unchecked")
-	static Class<? extends Throwable> parse(String className) {
+	static Class<? extends Throwable> parseType(String className) {
 		Class<?> c;
 		try {
 			c = Class.forName(className);
