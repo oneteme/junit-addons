@@ -30,7 +30,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
  *
  */
 @TestMethodOrder(MethodOrderer.MethodName.class)
-class JsonParserTest {
+class ObjectMapperConvertorTest {
 
 	private static Path asserts;
 
@@ -73,40 +73,40 @@ class JsonParserTest {
 	@Test
 	void testDefinedMapper_badMethodReturn() {
 		assertThrowsWithMessage(IllegalArgumentException.class, 
-				"JsonParserTest.badMethodReturn method must return an instance of ObjectMapper", 
+				"ObjectMapperConvertorTest.badMethodReturn method must return an instance of ObjectMapper", 
 				initJsonParser("badMethodReturn")::definedMapper);
 	}
 
 	@Test
 	void testDefinedMapper_invokeException() {
-		assertThrowsWithMessage(ResourceAccesException.class, 
-				"JsonParserTest.invokeException method invoke throws exception", 
+		assertThrowsWithMessage(ResourceAccessException.class, 
+				"ObjectMapperConvertorTest.invokeException method invoke throws exception", 
 				initJsonParser("invokeException")::definedMapper);
 	}
 	
 	@Test
 	void testDefinedMapper_missingMethod() {
 		assertThrowsWithMessage(NoSuchElementException.class, 
-				"JsonParserTest.missingMethod method not found", 
+				"ObjectMapperConvertorTest.missingMethod method not found", 
 				initJsonParser("missingMethod")::definedMapper);
 	}
 	
 	@Test
 	void testDefinedMapper_privateMethod() {
-		assertThrowsWithMessage(ResourceAccesException.class, 
-				"JsonParserTest.privateMethod method is not accessibe", 
+		assertThrowsWithMessage(ResourceAccessException.class, 
+				"ObjectMapperConvertorTest.privateMethod method is not accessibe", 
 				initJsonParser("privateMethod")::definedMapper);
 	}
 	
-	void defaultMapper(@ConvertWithJsonParser String[] arr){ }
+	void defaultMapper(@ConvertWithObjectMapper String[] arr){ }
 	
-	void badMethodReturn(@ConvertWithJsonParser(clazz = JsonParserTest.class, method = "badMethodReturn") String[] arr){ }
+	void badMethodReturn(@ConvertWithObjectMapper(clazz = ObjectMapperConvertorTest.class, method = "badMethodReturn") String[] arr){ }
 
-	void invokeException(@ConvertWithJsonParser(clazz = JsonParserTest.class, method = "invokeException") String[] arr){ }
+	void invokeException(@ConvertWithObjectMapper(clazz = ObjectMapperConvertorTest.class, method = "invokeException") String[] arr){ }
 
-	void missingMethod(@ConvertWithJsonParser(clazz = JsonParserTest.class, method = "missingMethod") String[] arr){ }
+	void missingMethod(@ConvertWithObjectMapper(clazz = ObjectMapperConvertorTest.class, method = "missingMethod") String[] arr){ }
 
-	void privateMethod(@ConvertWithJsonParser(clazz = JsonParserTest.class, method = "privateMethod") String[] arr){ }
+	void privateMethod(@ConvertWithObjectMapper(clazz = ObjectMapperConvertorTest.class, method = "privateMethod") String[] arr){ }
 
 	public static Object badMethodReturn() {
 		return null;
@@ -121,9 +121,9 @@ class JsonParserTest {
 		return null;
 	}
 
-	static JsonParser initJsonParser(String method) {
-		var jp = new JsonParser();
-		jp.accept(methodParameterAnnotation(JsonParserTest.class, method, ConvertWithJsonParser.class, String[].class));
+	static ObjectMapperConvertor initJsonParser(String method) {
+		var jp = new ObjectMapperConvertor();
+		jp.accept(methodParameterAnnotation(ObjectMapperConvertorTest.class, method, ConvertWithObjectMapper.class, String[].class));
 		return jp;
 	}
 }

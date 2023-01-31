@@ -15,12 +15,12 @@ import org.junit.jupiter.params.support.AnnotationConsumer;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-public final class JsonParser implements ArgumentConverter, AnnotationConsumer<ConvertWithJsonParser> {
+final class ObjectMapperConvertor implements ArgumentConverter, AnnotationConsumer<ConvertWithObjectMapper> {
 	
-	private ConvertWithJsonParser annotation;
+	private ConvertWithObjectMapper annotation;
 
 	@Override
-	public void accept(ConvertWithJsonParser annotation) {
+	public void accept(ConvertWithObjectMapper annotation) {
 		this.annotation = annotation;
 	}
 	
@@ -67,11 +67,11 @@ public final class JsonParser implements ArgumentConverter, AnnotationConsumer<C
 			}
 			throw new IllegalArgumentException(methodFullName() + " method must return an instance of ObjectMapper");
 		} catch (InvocationTargetException e) {
-			throw new ResourceAccesException(methodFullName() + " method invoke throws exception", e);
+			throw new ResourceAccessException(methodFullName() + " method invoke throws exception", e);
 		} catch (NoSuchMethodException e) {
 			throw new NoSuchElementException(methodFullName() + " method not found");
 		} catch (SecurityException | IllegalAccessException e) {
-			throw new ResourceAccesException(methodFullName() + " method is not accessibe", e);
+			throw new ResourceAccessException(methodFullName() + " method is not accessibe", e);
 		}
 	}
 	
@@ -82,7 +82,7 @@ public final class JsonParser implements ArgumentConverter, AnnotationConsumer<C
 	/**
 	 * do not delete or rename this method
 	 * 
-	 * @see org.usf.assertapi.core.junit.ConvertWithJsonParser
+	 * @see org.usf.ConvertWithObjectMapper.core.junit.ConvertWithJsonParser
 	 * 
 	 */
 	static ObjectMapper defaultMapper() {

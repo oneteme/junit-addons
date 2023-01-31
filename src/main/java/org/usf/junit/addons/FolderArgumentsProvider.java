@@ -119,7 +119,7 @@ public final class FolderArgumentsProvider implements ArgumentsProvider, Annotat
 		try {
 			return f.toURI().toURL().openStream();
 		} catch (IOException e) {
-			throw new ResourceAccesException(e);
+			throw new ResourceAccessException(e);
 		}
 	}
 	
@@ -127,7 +127,7 @@ public final class FolderArgumentsProvider implements ArgumentsProvider, Annotat
 		try {
 			return readString(f.toPath());
 		} catch (IOException e) {
-			throw new ResourceAccesException(e);
+			throw new ResourceAccessException(e);
 		}
 	}
 	
@@ -135,7 +135,7 @@ public final class FolderArgumentsProvider implements ArgumentsProvider, Annotat
 		try {
 			return readAllLines(f.toPath()).toArray(String[]::new);
 		} catch (IOException e) {
-			throw new ResourceAccesException(e);
+			throw new ResourceAccessException(e);
 		}
 	}	
 	
@@ -143,7 +143,7 @@ public final class FolderArgumentsProvider implements ArgumentsProvider, Annotat
 		try {
 			return readAllBytes(f.toPath());
 		} catch (IOException e) {
-			throw new ResourceAccesException(e);
+			throw new ResourceAccessException(e);
 		}
 	}
 	
