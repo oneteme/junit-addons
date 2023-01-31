@@ -15,12 +15,12 @@ import org.junit.jupiter.params.support.AnnotationConsumer;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-final class JsonParser implements ArgumentConverter, AnnotationConsumer<ConvertWithJsonParser> {
+final class ObjectMapperConvertor implements ArgumentConverter, AnnotationConsumer<ConvertWithObjectMapper> {
 	
-	private ConvertWithJsonParser annotation;
+	private ConvertWithObjectMapper annotation;
 
 	@Override
-	public void accept(ConvertWithJsonParser annotation) {
+	public void accept(ConvertWithObjectMapper annotation) {
 		this.annotation = annotation;
 	}
 	
@@ -82,7 +82,7 @@ final class JsonParser implements ArgumentConverter, AnnotationConsumer<ConvertW
 	/**
 	 * do not delete or rename this method
 	 * 
-	 * @see org.usf.assertapi.core.junit.ConvertWithJsonParser
+	 * @see org.usf.ConvertWithObjectMapper.core.junit.ConvertWithJsonParser
 	 * 
 	 */
 	static ObjectMapper defaultMapper() {

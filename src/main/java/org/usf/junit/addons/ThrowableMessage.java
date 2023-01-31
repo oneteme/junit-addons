@@ -1,5 +1,7 @@
 package org.usf.junit.addons;
 
+import static java.lang.Class.forName;
+
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -27,7 +29,7 @@ public class ThrowableMessage {
 	static Class<? extends Throwable> parseType(String className) {
 		Class<?> c;
 		try {
-			c = Class.forName(className);
+			c = forName(className);
 		} catch (ClassNotFoundException e) {
 			throw new IllegalArgumentException(className + " class not found", e);
 		}

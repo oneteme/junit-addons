@@ -21,5 +21,4 @@ public final class AssertExt {
 	public static void assertThrowsWithCause(Class<? extends Throwable> expectedType, Throwable expectedCause, Executable executable) {
 		assertSame(expectedCause, assertThrows(expectedType, executable).getCause());
 	}
-
 }

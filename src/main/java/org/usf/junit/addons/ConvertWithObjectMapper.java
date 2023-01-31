@@ -11,10 +11,10 @@ import org.junit.jupiter.params.converter.ConvertWith;
 @Target({ ElementType.PARAMETER })
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
-@ConvertWith(JsonParser.class)
-public @interface ConvertWithJsonParser {
+@ConvertWith(ObjectMapperConvertor.class)
+public @interface ConvertWithObjectMapper {
 	
-	Class<?> clazz() default JsonParser.class;
+	Class<?> clazz() default ObjectMapperConvertor.class;
 	
 	String method() default "defaultMapper";
 	
