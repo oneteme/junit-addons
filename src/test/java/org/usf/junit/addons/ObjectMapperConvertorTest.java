@@ -79,7 +79,7 @@ class ObjectMapperConvertorTest {
 
 	@Test
 	void testDefinedMapper_invokeException() {
-		assertThrowsWithMessage(ResourceAccesException.class, 
+		assertThrowsWithMessage(ResourceAccessException.class, 
 				"ObjectMapperConvertorTest.invokeException method invoke throws exception", 
 				initJsonParser("invokeException")::definedMapper);
 	}
@@ -93,7 +93,7 @@ class ObjectMapperConvertorTest {
 	
 	@Test
 	void testDefinedMapper_privateMethod() {
-		assertThrowsWithMessage(ResourceAccesException.class, 
+		assertThrowsWithMessage(ResourceAccessException.class, 
 				"ObjectMapperConvertorTest.privateMethod method is not accessibe", 
 				initJsonParser("privateMethod")::definedMapper);
 	}

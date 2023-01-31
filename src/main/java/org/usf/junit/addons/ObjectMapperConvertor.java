@@ -67,11 +67,11 @@ final class ObjectMapperConvertor implements ArgumentConverter, AnnotationConsum
 			}
 			throw new IllegalArgumentException(methodFullName() + " method must return an instance of ObjectMapper");
 		} catch (InvocationTargetException e) {
-			throw new ResourceAccesException(methodFullName() + " method invoke throws exception", e);
+			throw new ResourceAccessException(methodFullName() + " method invoke throws exception", e);
 		} catch (NoSuchMethodException e) {
 			throw new NoSuchElementException(methodFullName() + " method not found");
 		} catch (SecurityException | IllegalAccessException e) {
-			throw new ResourceAccesException(methodFullName() + " method is not accessibe", e);
+			throw new ResourceAccessException(methodFullName() + " method is not accessibe", e);
 		}
 	}
 	
