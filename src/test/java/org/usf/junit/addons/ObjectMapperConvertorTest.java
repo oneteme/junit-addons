@@ -73,28 +73,28 @@ class ObjectMapperConvertorTest {
 	@Test
 	void testDefinedMapper_badMethodReturn() {
 		assertThrowsWithMessage(IllegalArgumentException.class, 
-				"JsonParserTest.badMethodReturn method must return an instance of ObjectMapper", 
+				"ObjectMapperConvertorTest.badMethodReturn method must return an instance of ObjectMapper", 
 				initJsonParser("badMethodReturn")::definedMapper);
 	}
 
 	@Test
 	void testDefinedMapper_invokeException() {
 		assertThrowsWithMessage(ResourceAccesException.class, 
-				"JsonParserTest.invokeException method invoke throws exception", 
+				"ObjectMapperConvertorTest.invokeException method invoke throws exception", 
 				initJsonParser("invokeException")::definedMapper);
 	}
 	
 	@Test
 	void testDefinedMapper_missingMethod() {
 		assertThrowsWithMessage(NoSuchElementException.class, 
-				"JsonParserTest.missingMethod method not found", 
+				"ObjectMapperConvertorTest.missingMethod method not found", 
 				initJsonParser("missingMethod")::definedMapper);
 	}
 	
 	@Test
 	void testDefinedMapper_privateMethod() {
 		assertThrowsWithMessage(ResourceAccesException.class, 
-				"JsonParserTest.privateMethod method is not accessibe", 
+				"ObjectMapperConvertorTest.privateMethod method is not accessibe", 
 				initJsonParser("privateMethod")::definedMapper);
 	}
 	
