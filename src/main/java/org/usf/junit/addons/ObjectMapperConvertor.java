@@ -82,7 +82,7 @@ final class ObjectMapperConvertor implements ArgumentConverter, AnnotationConsum
 	/**
 	 * do not delete or rename this method
 	 * 
-	 * @see org.usf.ConvertWithObjectMapper.core.junit.ConvertWithJsonParser
+	 * @see org.usf.junit.addons.ConvertWithObjectMapper
 	 * 
 	 */
 	static ObjectMapper defaultMapper() {
